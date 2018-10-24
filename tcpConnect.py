@@ -34,7 +34,7 @@ def tcp_connect(target, port, timeout=1):
         print("failed: {}:{}".format(target,port))
         pass
 
-def tcp_connect_concurrent(target, port_count):
+def tcp_connect_concurrent(target, port_count, timeout=1):
     """
     Concurrently test tcp connections
 
@@ -52,7 +52,7 @@ def tcp_connect_concurrent(target, port_count):
     elif port_count > 65535:
         port_count = 65535
     with concurrent.futures.ProcessPoolExecutor(max_workers=50) as pool:
-        results = {pool.submit(tcp_connect, target, port): port for port in range(port_count)}
+        results = {pool.submit(tcp_connect, target, port,timeout): port for port in range(port_count)}
         for future in concurrent.futures.as_completed(results):
             if future.result():
                 results_list.append(future.result())
